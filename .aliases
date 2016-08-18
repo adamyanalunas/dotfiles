@@ -147,3 +147,12 @@ alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resource
 
 # Reload the shell (i.e. invoke as a login shell)
 alias reload="exec $SHELL -l"
+
+# CouchDB toggles
+alias couch_reset="launchctl stop org.apache.couchdb"
+alias couch_start="launchctl load ~/Library/LaunchAgents/homebrew.mxcl.couchdb.plist"
+alias couch_stop="launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.couchdb.plist"
+
+# ngingx toggles
+alias nginx_start="sudo launchctl load -w /Library/LaunchDaemons/homebrew.mxcl.nginx.plist"
+alias nginx_stop="sudo launchctl unload -w /Library/LaunchDaemons/homebrew.mxcl.nginx.plist"

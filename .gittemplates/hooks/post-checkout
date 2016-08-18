@@ -1,0 +1,37 @@
+#!/bin/bash
+
+PREVIOUS_HEAD=$1
+NEW_HEAD=$2
+BRANCH_SWITCH=$3
+
+if [[ $BRANCH_SWITCH == "1" && $PREVIOUS_HEAD != $NEW_HEAD ]]; then
+
+  # Kill the simulator.
+  SIM=`pgrep 'iPhone Simulator'`
+  if [[ "'$SIM'" != "" ]]; then
+    osascript -e 'tell application "iPhone Simulator" to quit'
+  fi
+
+  XCODE=`pgrep 'Xcode'`
+  if [[ "'$XCODE'" != "" ]]; then
+    WORKSPACE=`osascript -e 'tell application "Xcode" to get name of active workspace document' 2> /dev/null`
+    osascript -e 'tell application "Xcode" to close active workspace document'
+  fi
+
+  # Check if pods need to be installed.
+  diff "Podfile.lock" "Pods/Manifest.lock" > /dev/null 2>&1
+  if [[ $? != 0 ]]; then
+    echo "Pods are out of sync. Installing pods..."
+    bundle install > /dev/null 2>&1
+    bundle exec pod install
+    if [[ $? -eq 0 ]]; then
+      echo "Pods are now up to date."
+    fi
+  else
+     echo "Pods are already up to date."
+  fi
+
+  if [[ "$WORKSPACE" == *xcworkspace ]]; then
+    open $WORKSPACE
+  fi
+fi
