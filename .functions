@@ -107,7 +107,7 @@ function server() {
 # (Requires PHP 5.4.0+.)
 function phpserver() {
 	local port="${1:-4000}";
-	local ip=$(ipconfig getifaddr en1);
+	local ip=$(ipconfig getifaddr en0);
 	sleep 1 && open "http://${ip}:${port}/" &
 	php -S "${ip}:${port}";
 }
@@ -243,4 +243,20 @@ function o() {
 # small enough for one screen.
 function tre() {
 	tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
+}
+
+# Show ~/Desktop icons
+show_icons() {
+  defaults write com.apple.finder CreateDesktop true
+  killall Finder
+}
+
+# Hide ~/Desktop icons
+hide_icons() {
+  defaults write com.apple.finder CreateDesktop false
+  killall Finder
+}
+
+restart_gpg() {
+	gpgconf --kill gpg-agent
 }
