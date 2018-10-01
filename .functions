@@ -246,17 +246,35 @@ function tre() {
 }
 
 # Show ~/Desktop icons
-show_icons() {
+function show_icons() {
   defaults write com.apple.finder CreateDesktop true
   killall Finder
 }
 
 # Hide ~/Desktop icons
-hide_icons() {
+function hide_icons() {
   defaults write com.apple.finder CreateDesktop false
   killall Finder
 }
 
-restart_gpg() {
+function restart_gpg() {
 	gpgconf --kill gpg-agent
+}
+
+# function android_screenshot() {
+function adbscreen() {
+	if [ $# -lt 2 ]; then
+		if [ $# -lt 1 ]; then
+			echo "Need a file name"
+			exit
+		fi
+
+		local dest="~/Desktop"
+	else
+		local dest="./"
+	fi
+
+	~/Library/Android/sdk/platform-tools/adb shell screencap /sdcard/$1.png
+	~/Library/Android/sdk/platform-tools/adb pull /sdcard/$1.png $dest
+	~/Library/Android/sdk/platform-tools/adb shell rm /sdcard/$1.png
 }
